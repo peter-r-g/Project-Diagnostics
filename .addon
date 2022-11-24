@@ -1,0 +1,17 @@
+{
+  "Title": "Project Diagnostics",
+  "Type": "tool",
+  "Org": "gunman",
+  "Ident": "project_diagnostics",
+  "Tags": "",
+  "Schema": 1,
+  "HasAssets": false,
+  "AssetsPath": "",
+  "ResourcePaths": [],
+  "HasCode": true,
+  "CodePath": "code",
+  "RootNamespace": "Tools",
+  "Metadata": {
+    "ProjectTemplate": null
+  }
+}
