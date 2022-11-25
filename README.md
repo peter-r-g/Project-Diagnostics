@@ -19,3 +19,6 @@ An improved version of the current error list that exists in the S&box editor.
 1. Open the [Tools Manager](https://github.com/xezno/sbox-tools-manager)
 2. Add Tool...
 3. peter-r-g/Sbox-ProjectDiagnostics
+
+## Usage
+Once the tool is installed, in your S&box editor go to the top bar > View > Project Diagnostics
