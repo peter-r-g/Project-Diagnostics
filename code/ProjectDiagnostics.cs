@@ -10,7 +10,7 @@ namespace Gooman.Tools.ProjectDiagnostics;
 /// <summary>
 /// An improved version of the default Sbox error list.
 /// </summary>
-[Dock( "Editor", "Project Diagnostics", "report", DockArea = DockArea.Bottom )]
+[Dock( "Editor", "Project Diagnostics", "report" )]
 public sealed class ProjectDiagnostics : Widget
 {
 	/// <summary>
