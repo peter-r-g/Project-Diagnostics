@@ -1,5 +1,5 @@
-﻿using Sandbox.Internal;
-using Tools;
+﻿using Editor;
+using Sandbox.Internal;
 
 namespace Gooman.Tools.ProjectDiagnostics;
 

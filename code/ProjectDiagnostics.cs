@@ -1,9 +1,9 @@
-﻿using Sandbox;
+﻿using Editor;
+using Sandbox;
 using Sandbox.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Tools;
 
 namespace Gooman.Tools.ProjectDiagnostics;
 
@@ -52,10 +52,6 @@ public sealed class ProjectDiagnostics : Widget
 	/// </summary>
 	private readonly ComboBox ProjectFilterBox;
 	/// <summary>
-	/// Check box for whether or not to hide unaffiliated diagnostics.
-	/// </summary>
-	private readonly CheckBox HideUnaffiliatedDiagnosticsCheckBox;
-	/// <summary>
 	/// The visual list of all diagnostics.
 	/// </summary>
 	private readonly DiagnosticsListView DiagnosticsView;
@@ -80,10 +76,6 @@ public sealed class ProjectDiagnostics : Widget
 	/// The current filter for projects.
 	/// </summary>
 	private string FilteredProject = "all";
-	/// <summary>
-	/// Whether or not to hide unaffiliated diagnostics in projects.
-	/// </summary>
-	private bool HideUnaffiliatedDiagnostics = false;
 
 	/// <summary>
 	/// Initializes a new instance of <see cref="ProjectDiagnostics"/>.
@@ -153,12 +145,6 @@ public sealed class ProjectDiagnostics : Widget
 		};
 		ResetFilterBox();
 
-		HideUnaffiliatedDiagnosticsCheckBox = new CheckBox( "Hide unaffialiated diagnostics", this )
-		{
-			Toggled = ToggleDiagnosticsCheckBox,
-			StatusTip = "Whether or not to hide diagnostics from projects not directly affiliated with the compiled project"
-		};
-
 		var clearButton = new Button( string.Empty, "delete", this )
 		{
 			ButtonType = "clear",
@@ -168,7 +154,6 @@ public sealed class ProjectDiagnostics : Widget
 		clearButton.SetProperty( "cssClass", "clear" );
 
 		layout.Add( ProjectFilterBox );
-		layout.Add( HideUnaffiliatedDiagnosticsCheckBox );
 		layout.Add( clearButton );
 
 		// Error list.
@@ -185,7 +170,6 @@ public sealed class ProjectDiagnostics : Widget
 		ShowInfo = Cookie.Get( "project_diag_info_shown", true );
 		ShowWarnings = Cookie.Get( "project_diag_warnings_shown", true );
 		ShowErrors = Cookie.Get( "project_diag_errors_shown", true );
-		HideUnaffiliatedDiagnosticsCheckBox.Value = Cookie.Get( "project_diag_hide_unaf_diag", false );
 		// Update.
 		UpdateErrors();
 	}
@@ -254,13 +238,10 @@ public sealed class ProjectDiagnostics : Widget
 	/// </summary>
 	/// <param name="projectName">If provided, sets the project name filter.</param>
 	/// <param name="hideUnaffiliatedDiagnostics">If provided, sets whether or not to hide unaffiliated diagnostics.</param>
-	private void UpdateErrors( string projectName = null, bool? hideUnaffiliatedDiagnostics = null )
+	private void UpdateErrors( string projectName = null )
 	{
 		if ( projectName is not null )
 			FilteredProject = projectName;
-
-		if ( hideUnaffiliatedDiagnostics is not null )
-			HideUnaffiliatedDiagnostics = hideUnaffiliatedDiagnostics.Value;
 
 		// Fast path
 		if ( Diagnostics.Count == 0 || (!ShowInfo && !ShowWarnings && !ShowErrors) )
@@ -312,22 +293,7 @@ public sealed class ProjectDiagnostics : Widget
 		if ( FilteredProject != "all" && diagnostic.Project != FilteredProject )
 			return false;
 
-		var projectName = diagnostic.Project;
-		var relatedProject = Utility.Projects.GetAll().First( proj => proj.Config.FullIdent == projectName );
-		if ( HideUnaffiliatedDiagnostics && !diagnostic.FilePath.StartsWith( relatedProject.GetRootPath() ) )
-			return false;
-
 		return true;
-	}
-
-	/// <summary>
-	/// Callback method when the <see cref="HideUnaffiliatedDiagnosticsCheckBox"/> value has changed.
-	/// </summary>
-	private void ToggleDiagnosticsCheckBox()
-	{
-		var hide = HideUnaffiliatedDiagnosticsCheckBox.State == CheckState.On;
-		UpdateErrors( null, hide );
-		Cookie.Set( "project_diag_hide_unaf_diag", hide );
 	}
 
 	/// <summary>
