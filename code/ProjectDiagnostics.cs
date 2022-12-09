@@ -246,6 +246,10 @@ public sealed class ProjectDiagnostics : Widget
 		// Fast path
 		if ( Diagnostics.Count == 0 || (!ShowInfo && !ShowWarnings && !ShowErrors) )
 		{
+			ErrorsButton.Text = "0 Errors";
+			WarningsButton.Text = "0 Warnings";
+			InfoButton.Text = "0 Messages";
+
 			DiagnosticsView.SetItems( Array.Empty<object>() );
 			DiagnosticsView.Hide();
 			EmptyErrorListLabel.Show();
@@ -254,9 +258,9 @@ public sealed class ProjectDiagnostics : Widget
 
 		var q = Diagnostics.Where( FilterDiagnostic );
 
-		InfoButton.Text = $"{q.Count( x => x.Severity == ICSharpCompiler.DiagnosticSeverity.Info )} Messages";
-		WarningsButton.Text = $"{q.Count( x => x.Severity == ICSharpCompiler.DiagnosticSeverity.Warning )} Warnings";
 		ErrorsButton.Text = $"{q.Count( x => x.Severity == ICSharpCompiler.DiagnosticSeverity.Error )} Errors";
+		WarningsButton.Text = $"{q.Count( x => x.Severity == ICSharpCompiler.DiagnosticSeverity.Warning )} Warnings";
+		InfoButton.Text = $"{q.Count( x => x.Severity == ICSharpCompiler.DiagnosticSeverity.Info )} Messages";
 
 		if ( !ShowInfo )
 			q = q.Where( x => x.Severity != ICSharpCompiler.DiagnosticSeverity.Info );
